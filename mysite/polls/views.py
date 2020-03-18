@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from .models import Question
+from .models import Question
 
 # Ajoutons maintenant quelques vues supplémentaires dans polls/views.py. Ces vues sont légèrement différentes, car elles acceptent un paramètre :
 
@@ -18,9 +19,13 @@ def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
 
 
+
+
+
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    output = ', '.join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
-
-# Leave the rest of the views (detail, results, vote) unchanged
+    template = loader.get_template('polls/index.html')
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
